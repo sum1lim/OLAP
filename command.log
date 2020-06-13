@@ -20,6 +20,6 @@ python3 OLAP.py --input input.csv --group-by sector --count --min open --min clo
 
 python3 OLAP.py --input input.csv --group-by ticker --count --min open --max open --mean open --min high --max high --mean high --min low --max low --mean close --min close --max close --mean close > ./tests/param_groupby_all/output.csv
 
-python3 OLAP.py --input ./tests/error_capped_aggregate_distinct/input.csv --max day_number > ./tests/error_capped_aggregate_distinct/output.csv 2> ./tests/error_capped_aggregate_distinct/n.err
+python3 OLAP.py --input ./tests/error_capped_aggregate_distinct/input.csv --max day_number > ./tests/error_capped_aggregate_distinct/output.csv > ./tests/error_capped_aggregate_distinct/n.err
 
-python3 OLAP.py --input ./tests/error_capped_groupby_distinct/input.csv --group-by ticker > ./tests/error_capped_groupby_distinct/output.csv 2> ./tests/error_capped_groupby_distinct/n.err
+python3 OLAP.py --input ./tests/error_capped_groupby_distinct/input.csv --group-by ticker > ./tests/error_capped_groupby_distinct/output.csv > ./tests/error_capped_groupby_distinct/n.err

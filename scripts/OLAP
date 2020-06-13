@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+#encoding=utf8
+import argparse
+import os
+import sys
+import csv
+from OLAP.OLAP import OLAP
+
+
+def main(args):
+    output_dict={}
+    capped = False
+    OTHER_list = []
+
+    if(not args.input):
+        print("​Error: input file not provided", file=sys.stderr)
+        exit(6)
+    try:
+        f = open(args.input, "r")
+    except FileNotFoundError:
+        print("​Error: input file does not exist", file=sys.stderr)
+        exit(6)
+    reader = csv.DictReader(f)
+    row = ""
+    for row in reader:
+        break
+    if (row == ""):
+        print("​Error: "+args.input+" not in csv format", file=sys.stderr)
+        exit(6)
+
+    OLAP(args, output_dict, capped, OTHER_list)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--input', type=str, help='input csv file')
+    parser.add_argument('--group-by', type=str, help='groups categories by the given field')
+    parser.add_argument('--top', nargs=2, type=str, help='compute the ​ top k ​most common values of categorical-field-name')
+    parser.add_argument('--min',type=str, action='append',help='compute the ​ minimum​ value of numeric-field-name')
+    parser.add_argument('--max', type=str, action='append', help='compute the ​ maximum​ value of numeric-field-name')
+    parser.add_argument('--mean', type=str, action='append', help='compute the ​ mean​ (average) of numeric-field-name')
+    parser.add_argument('--sum', type=str, action='append', help='compute the ​ sum​ of numeric-field-name')
+    parser.add_argument('--count', action= 'store_true', help='count​ the number of records')
+    parser.add_argument('--limit-to', type=int, help='limit the number of records to the given value')
+
+    args = parser.parse_args()
+    main(args)

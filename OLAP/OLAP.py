@@ -5,6 +5,44 @@ import os
 import sys
 import csv
 
+def OLAP(args, output_dict, capped, OTHER_list):
+    if(args.group_by):
+        OTHER_list = group_by(output_dict, args)
+
+    if(args.top):
+        capped = top(output_dict, args, OTHER_list)
+
+    if(args.min):
+        Min(output_dict, args, OTHER_list)
+
+    if(args.max):
+        Max(output_dict, args, OTHER_list)
+
+    if(args.sum):
+        Sum(output_dict, args, args.sum, OTHER_list)
+
+    if(args.count or not args.group_by):
+        count(output_dict, args, OTHER_list)
+
+    if(args.mean):
+        mean(output_dict, args, OTHER_list)
+
+
+    sorted_keys = keySorter(capped)
+
+    for k in sorted_keys:
+        if (k not in output_dict.keys()):
+            sorted_keys.remove(k)
+
+    sorted_dict = {}
+    for k in sorted_keys:
+        try:
+            sorted_dict[k] = output_dict[k]
+        except KeyError:
+            continue
+    if(len(sorted_keys)>0):
+        printCSV(sorted_keys, sorted_dict)
+
 #creates, initiates and returns a dictionary with group-by categories for keys
 def mkDict(output_dict, args):
     dict = {}
@@ -521,82 +559,3 @@ def mean(output_dict, args, OTHER_list):
                 MEAN = 'NaN'
             output_dict['mean_' + i].append(MEAN)
             pos+=1
-
-
-def main():
-    # deliberately left blank for your implementation - remove this comment and begin
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('--input', type=str, help='input file')
-    parser.add_argument('--group-by', type=str, help='groups categories by the given field')
-    parser.add_argument('--top', nargs=2, type=str, help='compute the ​ top k ​most common values of categorical-field-name')
-    parser.add_argument('--min',type=str, action='append',help='compute the ​ minimum​ value of numeric-field-name')
-    parser.add_argument('--max', type=str, action='append', help='compute the ​ maximum​ value of numeric-field-name')
-    parser.add_argument('--mean', type=str, action='append', help='compute the ​ mean​ (average) of numeric-field-name')
-    parser.add_argument('--sum', type=str, action='append', help='compute the ​ sum​ of numeric-field-name')
-    parser.add_argument('--count', action= 'store_true', help='count​ the number of records')
-    parser.add_argument('--limit-to', type=int, help='limit the number of records to the given value')
-
-    args = parser.parse_args()
-    output_dict={}
-    index = 0
-    capped = False
-    OTHER_list = []
-
-    if(not args.input):
-        print("​Error: input file not provided", file=sys.stderr)
-        exit(6)
-    try:
-        f = open(args.input, "r")
-    except FileNotFoundError:
-        print("​Error: input file does not exist", file=sys.stderr)
-        exit(6)
-    reader = csv.DictReader(f)
-    row = ""
-    for row in reader:
-        break
-    if (row == ""):
-        print("​Error: "+args.input+" not in csv format", file=sys.stderr)
-        exit(6)
-
-    if(args.group_by):
-        OTHER_list = group_by(output_dict, args)
-
-    if(args.top):
-        capped = top(output_dict, args, OTHER_list)
-
-    if(args.min):
-        Min(output_dict, args, OTHER_list)
-
-    if(args.max):
-        Max(output_dict, args, OTHER_list)
-
-    if(args.sum):
-        Sum(output_dict, args, args.sum, OTHER_list)
-
-    if(args.count or not args.group_by):
-        count(output_dict, args, OTHER_list)
-
-    if(args.mean):
-        mean(output_dict, args, OTHER_list)
-
-
-    sorted_keys = keySorter(capped)
-
-    for k in sorted_keys:
-        if (k not in output_dict.keys()):
-            sorted_keys.remove(k)
-
-    sorted_dict = {}
-    for k in sorted_keys:
-        try:
-            sorted_dict[k] = output_dict[k]
-        except KeyError:
-            continue
-    if(len(sorted_keys)>0):
-        printCSV(sorted_keys, sorted_dict)
-
-
-
-if __name__ == '__main__':
-    main()
