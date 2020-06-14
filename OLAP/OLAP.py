@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 #encoding=utf8
-import argparse
-import os
 import sys
 import csv
 

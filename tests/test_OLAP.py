@@ -1,5 +1,3 @@
-import os
-import pkg_resources
 import pytest
 import sys
 from contextlib import redirect_stdout, redirect_stderr

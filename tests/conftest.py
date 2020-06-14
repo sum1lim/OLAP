@@ -1,6 +1,5 @@
 from pytest import fixture, mark
 import pkg_resources
-from nchelpers import CFDataset
 
 class arguments():
     def __init__(self):
