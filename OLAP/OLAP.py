@@ -5,7 +5,11 @@ import os
 import sys
 import csv
 
-def OLAP(args, output_dict, capped, OTHER_list):
+def OLAP(args):
+    output_dict={}
+    capped = False
+    OTHER_list = []
+
     if(args.group_by):
         OTHER_list = group_by(output_dict, args)
 
@@ -28,7 +32,7 @@ def OLAP(args, output_dict, capped, OTHER_list):
         mean(output_dict, args, OTHER_list)
 
 
-    sorted_keys = keySorter(capped)
+    sorted_keys = keySorter(args, capped)
 
     for k in sorted_keys:
         if (k not in output_dict.keys()):
@@ -87,44 +91,44 @@ def printCSV(sorted_keys, sorted_dict):
         pos += 1
 
 #sorts the keys in the order of the sequence the user requested
-def keySorter(capped):
+def keySorter(args, capped):
 
     sorted_keys = []
-    arg_list = sys.argv
-    i = 0
-    while(i<len(arg_list)):
-        curr = arg_list[i]
-        next = None
-        if(i+1<len(arg_list)):
-            next = arg_list[i+1]
 
-        if (curr[0:2] == '--'):
-            if(next !=None and next[0:2] != '--'):
-                if(curr.lower() == '--input'):
-                    i+=1
-                    continue
+    if(args.group_by):
+        sorted_keys.append(args.group_by)
 
-                elif(curr.lower() == '--group-by'):
-                    sorted_keys.append(arg_list[i+1])
-                    i+=1
-                    continue
+    if(args.count):
+        sorted_keys.append("count")
 
-                elif(curr.lower() == '--top'):
-                    curr += '_'
-                    curr += arg_list[i+2]
-                    if(capped):
-                        curr += '_capped'
+    if(args.min):
+        for arg in args.min:
+            header = "min_" + arg
+            sorted_keys.append(header)
 
-                else:
-                    curr += '_'
-                    curr += next
+    if(args.max):
+        for arg in args.max:
+            header = "max_" + arg
+            sorted_keys.append(header)
 
-            sorted_keys.append(curr[2:])
-        i+=1
+    if(args.sum):
+        for arg in args.sum:
+            header = "sum_" + arg
+            sorted_keys.append(header)
+
+    if(args.mean):
+        for arg in args.mean:
+            header = "mean_" + arg
+            sorted_keys.append(header)
+
+    if(args.top):
+        header = "top_" + args.top[1]
+        if capped:
+            header += "_capped"
+        sorted_keys.append(header)
 
     if(len(sorted_keys)==0):
         sorted_keys.append('count')
-
     return sorted_keys
 
 #changes a string in Unicode Transformation Format

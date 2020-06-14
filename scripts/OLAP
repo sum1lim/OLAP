@@ -8,10 +8,6 @@ from OLAP.OLAP import OLAP
 
 
 def main(args):
-    output_dict={}
-    capped = False
-    OTHER_list = []
-
     if(not args.input):
         print("​Error: input file not provided", file=sys.stderr)
         exit(6)
@@ -28,7 +24,7 @@ def main(args):
         print("​Error: "+args.input+" not in csv format", file=sys.stderr)
         exit(6)
 
-    OLAP(args, output_dict, capped, OTHER_list)
+    OLAP(args)
 
 
 if __name__ == '__main__':

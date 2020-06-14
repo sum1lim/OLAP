@@ -1,0 +1,11 @@
+param_noparams_countdefault: OLAP --input input.csv
+param_count: OLAP --input input.csv --count 
+param_max: OLAP --input input.csv --max high
+param_min: OLAP --input input.csv --min low
+param_mean: OLAP --input input.csv --mean close
+param_sum: OLAP --input input.csv --sum volume
+param_groupby_simple: OLAP --input input.csv --group-by sector --count --min open --min close --min high --min low --max open --max close --max high --max low --mean open --mean close --mean high --mean low
+param_groupby_all: OLAP --input input.csv --group-by ticker --count --min open --min high --min low --min close --max open --max high --max low --max close --mean open --mean high --mean low --mean close
+error_missing_field: OLAP --input input.csv --sum not_a_field
+error_groupby_arg_not_found: OLAP --input input.csv --group-by industry --count --min open --max open --mean open --min high --max high --mean high --min low --max low --mean close --min close --max close --mean close
+error_capped_aggregate_distinct: OLAP --input input.csv --max day_number
