@@ -1,6 +1,6 @@
 from setuptools import setup
 
-__version__ = (0, 0, 1)
+__version__ = (1, 0, 0)
 
 setup(
     name='OLAP',
@@ -9,6 +9,11 @@ setup(
     author='Sangwon Lim',
     author_email='sangwonl@uvic.ca',
     packages=['OLAP'],
+    package_data = {
+        'OLAP': [
+            'tests/data/input.csv'
+        ]
+    },
     include_package_data=True,
     scripts='''
         ./scripts/OLAP
